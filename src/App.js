@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import {BrowserRouter, Route, Switch, /*Redirect,*/ withRouter} from 'react-router-dom';
 import {Form} from "./pages/Form";
 import {FormPassword} from "./pages/FormPassword";
@@ -6,10 +7,13 @@ import {CardList} from "./pages/CardList";
 import {Card} from "./pages/Card";
 import {Navbar} from "./components/Navbar";
 import {About} from "./pages/About";
+=======
+>>>>>>> 02e7ecd... first commit
 
 function App(props) {
   const {history} = props.history;
   return (
+<<<<<<< HEAD
       <BrowserRouter>
           <Navbar />
           <div className="container pt-4">
@@ -23,6 +27,11 @@ function App(props) {
               </Switch>
           </div>
       </BrowserRouter>
+=======
+    <div className="container">
+
+    </div>
+>>>>>>> 02e7ecd... first commit
   );
 }
 
