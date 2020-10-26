@@ -43,19 +43,13 @@ export class FormPassword extends React.Component{
                 <div className="form-group">
 
                     <label htmlFor="inputLogin">Code from SMS</label>
-                    <div>
-                        {`Это секретное число - ${(sicretNums)}`}
-                    </div>
+                    <h2>{sicretNums}</h2>
                 </div>
 
                 <div className="form-group">
 
-                    <label htmlFor="inputSMS">Enter password from SMS</label>
+                    <label htmlFor="inputSMS">Enter code from SMS</label>
                     <input
-                        /*type="password"
-                        className="form-control"
-                        id="inputSMS"
-                        required*/
                         type="text"
                         className="form-control"
                         id="inputSMS"
@@ -63,6 +57,7 @@ export class FormPassword extends React.Component{
                         required
                         name="inputSMS"
                         onChange={this.changeInputHandler}
+                        autoFocus
                     />
 
                 </div>

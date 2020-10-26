@@ -1,13 +1,9 @@
 import React from 'react';
-<<<<<<< HEAD
 import {render} from 'react-dom';
 import {Router} from 'react-router-dom';
 import {createBrowserHistory} from 'history';
 import './index.css';
-=======
-import ReactDOM from 'react-dom';
-import './index.scss';
->>>>>>> 02e7ecd... first commit
+import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 

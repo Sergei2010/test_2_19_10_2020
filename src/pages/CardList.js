@@ -1,9 +1,18 @@
-import React, {Fragment} from 'react';
+import React, {Component, Fragment} from 'react';
+// импортируем функцию для загрузки
+import load from '../utils/load';
 
-export const CardList = () => {
-    return (
-        <Fragment>
-            <h1>Card list page</h1>
-        </Fragment>
-    )
+load('data.json')
+    .then(data => {
+        /* эта функция сработает для загруженных данных */
+    });
+
+export class CardList extends Component {
+    render() {
+        return (
+            <Fragment>
+                <h1>Card list page</h1>
+            </Fragment>
+        )
+    }
 }
