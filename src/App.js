@@ -2,10 +2,10 @@ import React from 'react';
 import {BrowserRouter, Route, Switch, /*Redirect,*/ withRouter} from 'react-router-dom';
 import {Form} from "./pages/Form";
 import {FormPassword} from "./pages/FormPassword";
-import {CardList} from "./pages/CardList";
 import {Card} from "./pages/Card";
 import {Navbar} from "./components/Navbar";
 import {About} from "./pages/About";
+import {CardList} from "./pages/CardList";
 
 function App(props) {
   const {history} = props.history;

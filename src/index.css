@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+.typesList {
+  padding-left: 30px;
+}
+
 /*
 body {
   font: 1em sans-serif;
