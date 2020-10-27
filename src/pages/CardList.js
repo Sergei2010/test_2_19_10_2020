@@ -1,11 +1,39 @@
 import React, {Component, Fragment} from 'react';
-import {pokemon} from "../components/pocemon/pocemon";
-import {dataType} from "../components/pocemon/type";
+//import {pokemon} from "../components/pocemon/pocemon";
+//import {dataType} from "../components/pocemon/type";
 
-pokemon.card.find('base1-4')
+/*pokemon.card.find('base1-4')
     .then(result => {
         console.log(result.card.name) // "Charizard"
-    })
+    })*/
+
+const requestURL = 'https://api.pokemontcg.io/v1/cards';
+const request = new XMLHttpRequest();
+request.open('GET', requestURL);
+request.responseType = 'text';
+request.send();
+
+const header = document.querySelector('header');
+request.onload = function() {
+    let superHeroesText = request.response;
+    let superHeroes = JSON.parse(superHeroesText);
+    populateHeader(superHeroes);
+    /*showHeroes(superHeroes);*/
+    console.log(superHeroes);
+}
+
+function populateHeader(jsonObj) {
+    let myH1 = document.createElement('h1');
+    myH1.textContent = jsonObj['types'];
+    header.appendChild(myH1);
+
+    let myPara = document.createElement('li');
+    myPara.textContent = 'type: ' + jsonObj['types'];
+    header.appendChild(myPara);
+}
+
+
+
 
 export class CardList extends Component {
     render() {
@@ -36,12 +64,14 @@ export class CardList extends Component {
                                     Type
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                    <li className="dropdown-item">{JSON.stringify(dataType, function replacer(key, value) {
-                                        return (`${key} : ${value}`)
-                                    })}</li>
+                                    <li className="dropdown-item">
+                                        <header>
+
+                                        </header>
+                                    </li>
                                 </ul>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                    {for(let value of dataType) {console.log(value)}}
+
                                 </ul>
                             </div>
 
@@ -60,7 +90,7 @@ export class CardList extends Component {
                         </li>
                         <li className="list-group-item w-100">
                             <div className="card">
-                                <img className="card-img-top" src="/images/pathToYourImage.png" alt="Card image cap" />
+                                <img className="card-img-top" src="/images/pathToYourImage.png" alt="img" />
                                     <div className="card-body">
                                         <h4 className="card-title">Card title</h4>
                                         <p className="card-text">
