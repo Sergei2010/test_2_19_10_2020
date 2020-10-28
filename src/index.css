@@ -12,7 +12,8 @@ code {
     monospace;
 }
 
-.typesList {
+.typesList,
+.subtype {
   padding-left: 30px;
 }
 

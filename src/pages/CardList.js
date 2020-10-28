@@ -5,8 +5,12 @@ export class CardList extends Component {
 
     constructor(props) {
         super(props);
-        this.handleLoadingCards= this.handleLoadingCards.bind(this);
-        this.state = {set: new Set()};
+        this.handleLoadingTypes = this.handleLoadingTypes.bind(this);
+        this.handleLoadingSubtype = this.handleLoadingSubtype.bind(this);
+        this.state = {
+            setTypes: new Set(),
+            setSubtype: new Set()
+        }
     }
     componentWillMount(){
         fetch(this.requestURL)
@@ -14,8 +18,9 @@ export class CardList extends Component {
             .then(
                 (result) => {
                     //let superHeroes = result;
-                    this.populateHeader(result)
                     console.log(result)
+                    this.populateTypes(result)
+                    this.populateSubtype(result)
                 },
                 // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
                 // чтобы не перехватывать исключения из ошибок в самих компонентах.
@@ -28,30 +33,53 @@ export class CardList extends Component {
             )
 
     }
-    populateHeader(jsonObj) {
-        let  ListWithDifferentElems = []
+    populateTypes(jsonObj) {
+        let  ListWithDifferentTypes = []
         jsonObj.cards.forEach(function (elem) {
             if (elem['types']) {
                 elem['types'].forEach(function (e) {
-                    ListWithDifferentElems.push(e)
+                    ListWithDifferentTypes.push(e)
                 })
 
             }
         })
-        let set = new Set(ListWithDifferentElems);
-        this.handleLoadingCards(set)
+        let setTypes = new Set(ListWithDifferentTypes);
+        this.handleLoadingTypes(setTypes)
     }
-    handleLoadingCards(set) {
-        this.setState({set: set});
+    handleLoadingTypes(setTypes) {
+        this.setState({setTypes: setTypes});
+    }
+
+    populateSubtype(jsonObj) {
+        let  ListWithDifferentSubtype = []
+        jsonObj.cards.forEach(function (elem) {
+            if (elem.subtype) {
+                ListWithDifferentSubtype.push(elem.subtype)
+            }
+        })
+        console.log(ListWithDifferentSubtype);
+        let setSubtype = new Set(ListWithDifferentSubtype);
+        console.log(setSubtype);
+        this.handleLoadingSubtype(setSubtype)
+    }
+    handleLoadingSubtype(setSubtype) {
+        this.setState({setSubtype: setSubtype});
     }
 
     render() {
-        const listItems = [...this.state.set].map((number) =>
+
+        const listTypes = [...this.state.setTypes].map((number) =>
             <li key={number.toString()}>
-                {number}
+                <a href='url'>{number}</a>
             </li>
         );
-        console.log(listItems)
+
+        const listSubtype = [...this.state.setSubtype].map((number) =>
+            <li key={number.toString()}>
+                <a href='url'>{number}</a>
+            </li>
+        );
+
         return (
             <Fragment>
                 <div className="container d-flex justify-content-between">
@@ -80,7 +108,7 @@ export class CardList extends Component {
                                 </button>
 
                                 <ul className="dropdown-menu typesList"  aria-labelledby="dropdownMenu1">
-                                    {listItems}
+                                    {listTypes}
                                 </ul>
 
 
@@ -88,14 +116,16 @@ export class CardList extends Component {
 
                             <div className="dropdown m-4">
                                 <button className="btn btn-secondary dropdown-toggle w-25"
-                                        type="button" id="dropdownMenu2" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
+                                        type="button" id="dropdownMenu2"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                >
                                     Subtype
                                 </button>
-                                <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                    <a className="dropdown-item" href="url">Action</a>
-                                    <a className="dropdown-item" href="url">Another action</a>
-                                </div>
+                                <ul className="dropdown-menu subtype"  aria-labelledby="dropdownMenu2">
+                                    {listSubtype}
+                                </ul>
                             </div>
 
                         </div>
