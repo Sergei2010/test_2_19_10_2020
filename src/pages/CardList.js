@@ -1,37 +1,19 @@
 import React, {Component, Fragment} from 'react';
-//import {pokemon} from "../components/pocemon/pocemon";
-//import {dataType} from "../components/pocemon/type";
-
-
-
-/*
-function populateHeader(jsonObj) {
-    let a = document.querySelector('.typesList')
-    jsonObj.cards.forEach(function (elem) {
-        let myLi = document.createElement('li');
-        myLi.textContent = elem['types'];
-        //let set = new Set(Object.entries(myLi.textContent))
-
-        a.appendChild(myLi);
-    })
-
-}
-*/
-
-
-
-
 
 export class CardList extends Component {
     requestURL = 'https://api.pokemontcg.io/v1/cards';
-    request = new XMLHttpRequest();
 
+    constructor(props) {
+        super(props);
+        this.handleLoadingCards= this.handleLoadingCards.bind(this);
+        this.state = {set: new Set()};
+    }
     componentWillMount(){
         fetch(this.requestURL)
             .then(res => res.json())
             .then(
                 (result) => {
-                    let superHeroes = result;
+                    //let superHeroes = result;
                     this.populateHeader(result)
                     console.log(result)
                 },
@@ -46,11 +28,7 @@ export class CardList extends Component {
             )
 
     }
-
-
-     populateHeader(jsonObj) {
-        let a = document.querySelector('.typesList');
-        console.log(a);
+    populateHeader(jsonObj) {
         let  ListWithDifferentElems = []
         jsonObj.cards.forEach(function (elem) {
             if (elem['types']) {
@@ -61,14 +39,19 @@ export class CardList extends Component {
             }
         })
         let set = new Set(ListWithDifferentElems);
-        set.forEach(function (elem) {
-            let myLi = document.createElement('Li');
-            myLi.textContent = elem;
-            a.appendChild(myLi);
-        })
-
+        this.handleLoadingCards(set)
     }
+    handleLoadingCards(set) {
+        this.setState({set: set});
+    }
+
     render() {
+        const listItems = [...this.state.set].map((number) =>
+            <li key={number.toString()}>
+                {number}
+            </li>
+        );
+        console.log(listItems)
         return (
             <Fragment>
                 <div className="container d-flex justify-content-between">
@@ -96,7 +79,9 @@ export class CardList extends Component {
                                     Type
                                 </button>
 
-                                <ul className="dropdown-menu typesList"  aria-labelledby="dropdownMenu1"></ul>
+                                <ul className="dropdown-menu typesList"  aria-labelledby="dropdownMenu1">
+                                    {listItems}
+                                </ul>
 
 
                             </div>
@@ -131,6 +116,8 @@ export class CardList extends Component {
                     </div>
                 </div>
             </Fragment>
-        )
+        );
     }
 }
+
+
