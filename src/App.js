@@ -6,6 +6,7 @@ import {Card} from "./pages/Card";
 import {Navbar} from "./components/Navbar";
 import {About} from "./pages/About";
 import {CardList} from "./pages/CardList";
+import {CardItem} from "./components/CardItem";
 
 function App(props) {
   const {history} = props.history;
@@ -19,6 +20,7 @@ function App(props) {
                   <Route history={history} path={'/cardList'} component={CardList} />
                   <Route history={history} path={'/card'} component={Card} />
                   <Route history={history} path={'/about'} component={About} />
+                  <Route history={history} path={'/cardItem'} component={CardItem} />
               </Switch>
           </div>
       </BrowserRouter>

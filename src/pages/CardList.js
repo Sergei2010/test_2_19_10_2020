@@ -1,4 +1,5 @@
 import React, {Component, Fragment} from 'react';
+import {CardItem} from "../components/CardItem";
 
 export class CardList extends Component {
     requestURL = 'https://api.pokemontcg.io/v1/cards';
@@ -7,10 +8,15 @@ export class CardList extends Component {
         super(props);
         this.handleLoadingTypes = this.handleLoadingTypes.bind(this);
         this.handleLoadingSubtype = this.handleLoadingSubtype.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+
         this.state = {
             setTypes: new Set(),
-            setSubtype: new Set()
+            setSubtype: new Set(),
+            clicked: 'aaa'
+
         }
+        //console.log(this.state);
     }
     componentWillMount(){
         fetch(this.requestURL)
@@ -18,7 +24,7 @@ export class CardList extends Component {
             .then(
                 (result) => {
                     //let superHeroes = result;
-                    console.log(result)
+                    //console.log(result)
                     this.populateTypes(result)
                     this.populateSubtype(result)
                 },
@@ -31,7 +37,6 @@ export class CardList extends Component {
                     });
                 }
             )
-
     }
     populateTypes(jsonObj) {
         let  ListWithDifferentTypes = []
@@ -48,6 +53,7 @@ export class CardList extends Component {
     }
     handleLoadingTypes(setTypes) {
         this.setState({setTypes: setTypes});
+        //console.log(this.state)
     }
 
     populateSubtype(jsonObj) {
@@ -57,26 +63,49 @@ export class CardList extends Component {
                 ListWithDifferentSubtype.push(elem.subtype)
             }
         })
-        console.log(ListWithDifferentSubtype);
         let setSubtype = new Set(ListWithDifferentSubtype);
-        console.log(setSubtype);
         this.handleLoadingSubtype(setSubtype)
     }
     handleLoadingSubtype(setSubtype) {
         this.setState({setSubtype: setSubtype});
+        //console.log(this.state)
     }
 
-    render() {
+    handleClick(e) {
+        e.preventDefault();
+        e.persist();
+        this.setState( {
+            // Важно: используем `state` вместо `this.state` при обновлении.
+            clicked: e.target.textContent
+        })
+        console.log(this.state);
+    }
 
+
+    render() {
+        const clicked = this.state.clicked;
         const listTypes = [...this.state.setTypes].map((number) =>
             <li key={number.toString()}>
-                <a href='url'>{number}</a>
+                <a
+                    value={clicked}
+                    href='/cardItem'
+                    onClick={this.handleClick}
+                >
+                    {number}
+                </a>
             </li>
-        );
+        )
+
 
         const listSubtype = [...this.state.setSubtype].map((number) =>
             <li key={number.toString()}>
-                <a href='url'>{number}</a>
+                <a
+                    value={clicked}
+                    href='/cardItem'
+                    onClick={this.handleClick}
+                >
+                    {number}
+                </a>
             </li>
         );
 
@@ -129,20 +158,9 @@ export class CardList extends Component {
                             </div>
 
                         </div>
-                        <div className="list-group-item w-100">
-                            <div className="card">
-                                <img className="card-img-top" src="/images/pathToYourImage.png" alt="img" />
-                                <div className="card-body">
-                                    <h4 className="card-title">Card title</h4>
-                                    <p className="card-text">
-                                        Some quick example text to build on the card title
-                                        and make up the bulk of the card's content.
-                                    </p>
-                                    <a href="url" className="btn btn-primary">Go somewhere</a>
-                                </div>
-                            </div>
 
-                        </div>
+                        <CardItem />
+
                     </div>
                 </div>
             </Fragment>
