@@ -8,15 +8,17 @@ export class CardList extends Component {
         super(props);
         this.handleLoadingTypes = this.handleLoadingTypes.bind(this);
         this.handleLoadingSubtype = this.handleLoadingSubtype.bind(this);
-        this.handleClick = this.handleClick.bind(this);
+        this.handleClickTypes = this.handleClickTypes.bind(this);
+        this.handleClickSubtype = this.handleClickSubtype.bind(this);
 
         this.state = {
             setTypes: new Set(),
             setSubtype: new Set(),
-            clicked: 'aaa'
+            clickedTypes: null,
+            clickedSubtype: null
 
         }
-        //console.log(this.state);
+
     }
     componentWillMount(){
         fetch(this.requestURL)
@@ -39,7 +41,7 @@ export class CardList extends Component {
             )
     }
     populateTypes(jsonObj) {
-        let  ListWithDifferentTypes = []
+        const  ListWithDifferentTypes = []
         jsonObj.cards.forEach(function (elem) {
             if (elem['types']) {
                 elem['types'].forEach(function (e) {
@@ -48,61 +50,80 @@ export class CardList extends Component {
 
             }
         })
-        let setTypes = new Set(ListWithDifferentTypes);
+        const setTypes = new Set(ListWithDifferentTypes);
         this.handleLoadingTypes(setTypes)
     }
     handleLoadingTypes(setTypes) {
         this.setState({setTypes: setTypes});
-        //console.log(this.state)
     }
 
     populateSubtype(jsonObj) {
-        let  ListWithDifferentSubtype = []
+        const  ListWithDifferentSubtype = []
         jsonObj.cards.forEach(function (elem) {
             if (elem.subtype) {
                 ListWithDifferentSubtype.push(elem.subtype)
             }
         })
-        let setSubtype = new Set(ListWithDifferentSubtype);
+        const setSubtype = new Set(ListWithDifferentSubtype);
         this.handleLoadingSubtype(setSubtype)
     }
     handleLoadingSubtype(setSubtype) {
         this.setState({setSubtype: setSubtype});
-        //console.log(this.state)
     }
 
-    handleClick(e) {
+    /*handleClickTypes(e) {
         e.preventDefault();
         e.persist();
-        this.setState( {
+        /!*this.setState( {
             // Важно: используем `state` вместо `this.state` при обновлении.
-            clicked: e.target.textContent
-        })
-        console.log(this.state);
+            return{clicked: e.target.textContent}
+        })*!/
+       /!* this.setState((state) => {
+            // Важно: используем `state` вместо `this.state` при обновлении.
+            return {clicked: e.target.textContent}
+        });*!/
+        //console.log(this.state);
+        this.setState.clickedTypes = e.target.textContent;
+        console.log(this.state.clickedTypes);
+    }*/
+
+    handleClickTypes(e) {
+        e.preventDefault();
+        e.persist();
+        this.setState({clickedTypes: e.target.textContent});
+        //this.state.clickedTypes = e.target.textContent;
+        console.log(this.state.clickedTypes);
+    }
+
+    handleClickSubtype(e) {
+        e.preventDefault();
+        e.persist();
+        this.setState({clickedSubtype: e.target.textContent});
+        console.log(this.state.clickedSubtype);
     }
 
 
     render() {
-        const clicked = this.state.clicked;
+
+        //const clickedTypes = this.state.clickedTypes;
         const listTypes = [...this.state.setTypes].map((number) =>
             <li key={number.toString()}>
                 <a
-                    value={clicked}
                     href='/cardItem'
-                    onClick={this.handleClick}
+                    onClick={this.handleClickTypes}
                 >
                     {number}
                 </a>
             </li>
         )
 
-
+        //const clickedSubtype = this.state.clickedSubtype;
         const listSubtype = [...this.state.setSubtype].map((number) =>
             <li key={number.toString()}>
                 <a
-                    value={clicked}
+                    /*value={clicked}*/
                     href='/cardItem'
-                    onClick={this.handleClick}
+                    onClick={this.handleClickSubtype}
                 >
                     {number}
                 </a>

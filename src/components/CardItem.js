@@ -10,9 +10,7 @@ export class CardItem extends Component {
         this.state = {
             setCardItem: new Set(),
         }
-        //console.log(this.state);
     }
-
     componentWillMount(){
         fetch(this.requestURL)
             .then(res => res.json())
