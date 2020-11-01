@@ -6,17 +6,25 @@ export class CardList extends Component {
 
     constructor(props) {
         super(props);
+
         this.handleLoadingTypes = this.handleLoadingTypes.bind(this);
         this.handleLoadingSubtype = this.handleLoadingSubtype.bind(this);
+
         this.handleClickTypes = this.handleClickTypes.bind(this);
         this.handleClickSubtype = this.handleClickSubtype.bind(this);
+
+        this.handleFindTypes = this.handleFindTypes.bind(this);
+        this.handleFindSubtype = this.handleFindSubtype.bind(this);
 
         this.state = {
             setTypes: new Set(),
             setSubtype: new Set(),
-            clickedTypes: null,
-            clickedSubtype: null
 
+            clickedTypes: null,
+            clickedSubtype: null,
+
+           /* setFindTypes: new Set(),
+            setFindSubtype: new Set()*/
         }
 
     }
@@ -25,7 +33,6 @@ export class CardList extends Component {
             .then(res => res.json())
             .then(
                 (result) => {
-                    //let superHeroes = result;
                     //console.log(result)
                     this.populateTypes(result)
                     this.populateSubtype(result)
@@ -71,41 +78,104 @@ export class CardList extends Component {
         this.setState({setSubtype: setSubtype});
     }
 
-    /*handleClickTypes(e) {
-        e.preventDefault();
-        e.persist();
-        /!*this.setState( {
-            // Важно: используем `state` вместо `this.state` при обновлении.
-            return{clicked: e.target.textContent}
-        })*!/
-       /!* this.setState((state) => {
-            // Важно: используем `state` вместо `this.state` при обновлении.
-            return {clicked: e.target.textContent}
-        });*!/
-        //console.log(this.state);
-        this.setState.clickedTypes = e.target.textContent;
-        console.log(this.state.clickedTypes);
-    }*/
-
     handleClickTypes(e) {
         e.preventDefault();
         e.persist();
-        this.setState({clickedTypes: e.target.textContent});
+        const textTypes = e.target.textContent;
+        this.setState({clickedTypes: textTypes});
         //this.state.clickedTypes = e.target.textContent;
-        console.log(this.state.clickedTypes);
+        //console.log(this.state.clickedTypes);
+        this.handleFindTypes(textTypes)
+    }
+
+    handleFindTypes(textTypes) {
+        fetch(this.requestURL)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    //console.log(result)
+                    this.populateFindTypes(result, textTypes)
+                },
+                // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
+                // чтобы не перехватывать исключения из ошибок в самих компонентах.
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+    }
+
+    populateFindTypes(jsonObj, textTypes) {
+        const  ListWithDifferentFindTypes = []
+        jsonObj.cards.forEach(function (elem) {
+            if(elem['types']) {
+                elem['types'].forEach(function (e) {
+                    if (elem['types'].includes(textTypes)) {
+                        const e = [elem['id'], elem['imageUrl'], elem['name'], elem['artist']]
+                        ListWithDifferentFindTypes.push(e)
+                    }
+                })
+            }
+        })
+        const setFindTypes = new Set(ListWithDifferentFindTypes);
+        this.handleLoadingFindTypes(setFindTypes)
+        console.log(setFindTypes)
+    }
+
+    handleLoadingFindTypes(setFindTypes) {
+        this.setState({setFindTypes: setFindTypes});
     }
 
     handleClickSubtype(e) {
         e.preventDefault();
         e.persist();
-        this.setState({clickedSubtype: e.target.textContent});
-        console.log(this.state.clickedSubtype);
+        const textSubtype = e.target.textContent;
+        this.setState({clickedSubtype: textSubtype});
+        //console.log(this.state.clickedSubtype);
+        this.handleFindSubtype(textSubtype)
+    }
+
+    handleFindSubtype(textSubtype) {
+        fetch(this.requestURL)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    //console.log(result)
+                    this.populateFindSubtype(result, textSubtype)
+                },
+                // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
+                // чтобы не перехватывать исключения из ошибок в самих компонентах.
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+    }
+
+    populateFindSubtype(jsonObj, textSubtype) {
+        const  ListWithDifferentFindSubtype = []
+        jsonObj.cards.forEach(function (elem) {
+            if(elem.subtype && elem.subtype === textSubtype) {
+                const e = [elem['id'], elem['imageUrl'], elem['name'], elem['artist']]
+                ListWithDifferentFindSubtype.push(e)
+            }
+        })
+        const setFindSubtype = new Set(ListWithDifferentFindSubtype);
+        this.handleLoadingFindSubtype(setFindSubtype)
+        console.log(setFindSubtype)
+    }
+
+    handleLoadingFindSubtype(setFindSubtype) {
+        this.setState({setFindSubtype: setFindSubtype});
     }
 
 
     render() {
 
-        //const clickedTypes = this.state.clickedTypes;
         const listTypes = [...this.state.setTypes].map((number) =>
             <li key={number.toString()}>
                 <a
@@ -117,11 +187,9 @@ export class CardList extends Component {
             </li>
         )
 
-        //const clickedSubtype = this.state.clickedSubtype;
         const listSubtype = [...this.state.setSubtype].map((number) =>
             <li key={number.toString()}>
                 <a
-                    /*value={clicked}*/
                     href='/cardItem'
                     onClick={this.handleClickSubtype}
                 >
@@ -154,7 +222,7 @@ export class CardList extends Component {
                                     aria-haspopup="true"
                                     aria-expanded="false"
                                 >
-                                    Type
+                                    Types
                                 </button>
 
                                 <ul className="dropdown-menu typesList"  aria-labelledby="dropdownMenu1">
