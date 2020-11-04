@@ -23,8 +23,8 @@ export class CardList extends Component {
             clickedTypes: null,
             clickedSubtype: null,
 
-           /* setFindTypes: new Set(),
-            setFindSubtype: new Set()*/
+            setFindTypes: new Set(),
+            setFindSubtype: new Set()
         }
 
     }
@@ -88,7 +88,7 @@ export class CardList extends Component {
         this.handleFindTypes(textTypes)
     }
 
-    handleFindTypes(textTypes) {
+    /*handleFindTypes(textTypes) {
         fetch(this.requestURL)
             .then(res => res.json())
             .then(
@@ -105,9 +105,30 @@ export class CardList extends Component {
                     });
                 }
             )
+    }*/
+
+    handleFindTypes(textTypes) {
+        this.requestTypURL = this.requestURL + '?types=' + textTypes;
+        //console.log(this.requestTypURL);
+        fetch(this.requestTypURL)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    //console.log(result)
+                    this.populateFindTypes(result)
+                },
+                // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
+                // чтобы не перехватывать исключения из ошибок в самих компонентах.
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
     }
 
-    populateFindTypes(jsonObj, textTypes) {
+    /*populateFindTypes(jsonObj, textTypes) {
         const  ListWithDifferentFindTypes = []
         jsonObj.cards.forEach(function (elem) {
             if(elem['types']) {
@@ -121,11 +142,25 @@ export class CardList extends Component {
         })
         const setFindTypes = new Set(ListWithDifferentFindTypes);
         this.handleLoadingFindTypes(setFindTypes)
-        console.log(setFindTypes)
+        //console.log(setFindTypes)
+    }*/
+
+    populateFindTypes(jsonObj) {
+        const  ListWithDifferentFindTypes = []
+        jsonObj.cards.forEach(function (e) {
+            ListWithDifferentFindTypes.push(e)
+        })
+        const setFindTypes = new Set(ListWithDifferentFindTypes);
+        this.handleLoadingFindTypes(setFindTypes)
+        //console.log(setFindTypes)
     }
 
     handleLoadingFindTypes(setFindTypes) {
-        this.setState({setFindTypes: setFindTypes});
+        this.setState({
+            setFindTypes: setFindTypes,
+            setFindSubtype: ''
+        });
+        //console.log(this.state.setTypes)
     }
 
     handleClickSubtype(e) {
@@ -137,7 +172,7 @@ export class CardList extends Component {
         this.handleFindSubtype(textSubtype)
     }
 
-    handleFindSubtype(textSubtype) {
+    /*handleFindSubtype(textSubtype) {
         fetch(this.requestURL)
             .then(res => res.json())
             .then(
@@ -154,9 +189,30 @@ export class CardList extends Component {
                     });
                 }
             )
+    }*/
+
+    handleFindSubtype(textSubtype) {
+        this.requestSubURL = this.requestURL + '?subtype=' + textSubtype;
+        //console.log(this.requestSubURL)
+        fetch(this.requestSubURL)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    //console.log(result)
+                    this.populateFindSubtype(result)
+                },
+                // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
+                // чтобы не перехватывать исключения из ошибок в самих компонентах.
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
     }
 
-    populateFindSubtype(jsonObj, textSubtype) {
+   /* populateFindSubtype(jsonObj, textSubtype) {
         const  ListWithDifferentFindSubtype = []
         jsonObj.cards.forEach(function (elem) {
             if(elem.subtype && elem.subtype === textSubtype) {
@@ -166,11 +222,25 @@ export class CardList extends Component {
         })
         const setFindSubtype = new Set(ListWithDifferentFindSubtype);
         this.handleLoadingFindSubtype(setFindSubtype)
-        console.log(setFindSubtype)
+        //console.log(setFindSubtype)
+    }*/
+
+    populateFindSubtype(jsonObj) {
+        const  ListWithDifferentFindSubtype = []
+        jsonObj.cards.forEach(function (e) {
+            ListWithDifferentFindSubtype.push(e)
+        })
+        const setFindSubtype = new Set(ListWithDifferentFindSubtype);
+        this.handleLoadingFindSubtype(setFindSubtype)
+        //console.log(setFindSubtype)
     }
 
     handleLoadingFindSubtype(setFindSubtype) {
-        this.setState({setFindSubtype: setFindSubtype});
+        this.setState({
+            setFindSubtype: setFindSubtype,
+            setFindTypes: ''
+        });
+        //console.log(this.state)
     }
 
 
@@ -209,13 +279,13 @@ export class CardList extends Component {
                         Logout
                     </button>
                 </div>
-                <div className="container">
+                <div className="container border border-info mt-3">
                     <div className="list-group list-group-horizontal">
-                        <div className="list-group-item w-100">
+                        <div className="list-group-item w-auto">
 
                             <div className="dropdown m-4">
                                 <button
-                                    className="btn btn-secondary dropdown-toggle w-25"
+                                    className="btn btn-secondary dropdown-toggle w-100"
                                     type="button"
                                     id="dropdownMenu1"
                                     data-toggle="dropdown"
@@ -233,7 +303,7 @@ export class CardList extends Component {
                             </div>
 
                             <div className="dropdown m-4">
-                                <button className="btn btn-secondary dropdown-toggle w-25"
+                                <button className="btn btn-secondary dropdown-toggle"
                                         type="button" id="dropdownMenu2"
                                         data-toggle="dropdown"
                                         aria-haspopup="true"
@@ -248,7 +318,10 @@ export class CardList extends Component {
 
                         </div>
 
-                        <CardItem />
+                        <div className="list-group-item w-100 align-self-center">
+
+                            <CardItem itemsTypes={this.state.setFindTypes} itemsSubtype={this.state.setFindSubtype} />
+                        </div>
 
                     </div>
                 </div>
