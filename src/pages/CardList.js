@@ -3,6 +3,8 @@ import {CardItem} from "../components/CardItem";
 
 export class CardList extends Component {
     requestURL = 'https://api.pokemontcg.io/v1/cards';
+    requestURLTypes = 'https://api.pokemontcg.io/v1/types';
+    requestURLSubtype = 'https://api.pokemontcg.io/v1/subtypes';
 
     constructor(props) {
         super(props);
@@ -28,14 +30,16 @@ export class CardList extends Component {
         }
 
     }
+
     componentWillMount(){
         fetch(this.requestURL)
             .then(res => res.json())
             .then(
                 (result) => {
                     //console.log(result)
-                    this.populateTypes(result)
-                    this.populateSubtype(result)
+                    this.populateFindTypes(result); // показать сразу в правой части карточки
+                    //this.populateTypes(result);
+                    //this.populateSubtype(result);
                 },
                 // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
                 // чтобы не перехватывать исключения из ошибок в самих компонентах.
@@ -46,36 +50,66 @@ export class CardList extends Component {
                     });
                 }
             )
+        fetch(this.requestURLTypes)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    //console.log(result)
+                    this.populateTypes(result);
+                },
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+        fetch(this.requestURLSubtype)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    //console.log(result)
+                    this.populateSubtype(result);
+                },
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
     }
+
     populateTypes(jsonObj) {
         const  ListWithDifferentTypes = []
-        jsonObj.cards.forEach(function (elem) {
-            if (elem['types']) {
-                elem['types'].forEach(function (e) {
-                    ListWithDifferentTypes.push(e)
-                })
-
-            }
+        jsonObj.types.forEach(function (elem) {
+            Object.values(jsonObj.types).forEach(function (e) {
+                ListWithDifferentTypes.push(e)
+            })
         })
         const setTypes = new Set(ListWithDifferentTypes);
         this.handleLoadingTypes(setTypes)
     }
+
     handleLoadingTypes(setTypes) {
         this.setState({setTypes: setTypes});
+        //console.log(this.state.setTypes)
     }
+
 
     populateSubtype(jsonObj) {
         const  ListWithDifferentSubtype = []
-        jsonObj.cards.forEach(function (elem) {
-            if (elem.subtype) {
-                ListWithDifferentSubtype.push(elem.subtype)
-            }
+        jsonObj.subtypes.forEach(function (elem) {
+            Object.values(jsonObj.subtypes).forEach(function (e) {
+                ListWithDifferentSubtype.push(e)
+            })
         })
         const setSubtype = new Set(ListWithDifferentSubtype);
         this.handleLoadingSubtype(setSubtype)
     }
     handleLoadingSubtype(setSubtype) {
         this.setState({setSubtype: setSubtype});
+        //console.log(this.state.setSubtype)
     }
 
     handleClickTypes(e) {
@@ -87,25 +121,6 @@ export class CardList extends Component {
         //console.log(this.state.clickedTypes);
         this.handleFindTypes(textTypes)
     }
-
-    /*handleFindTypes(textTypes) {
-        fetch(this.requestURL)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    //console.log(result)
-                    this.populateFindTypes(result, textTypes)
-                },
-                // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-                // чтобы не перехватывать исключения из ошибок в самих компонентах.
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )
-    }*/
 
     handleFindTypes(textTypes) {
         this.requestTypURL = this.requestURL + '?types=' + textTypes;
@@ -127,23 +142,6 @@ export class CardList extends Component {
                 }
             )
     }
-
-    /*populateFindTypes(jsonObj, textTypes) {
-        const  ListWithDifferentFindTypes = []
-        jsonObj.cards.forEach(function (elem) {
-            if(elem['types']) {
-                elem['types'].forEach(function (e) {
-                    if (elem['types'].includes(textTypes)) {
-                        const e = [elem['id'], elem['imageUrl'], elem['name'], elem['artist']]
-                        ListWithDifferentFindTypes.push(e)
-                    }
-                })
-            }
-        })
-        const setFindTypes = new Set(ListWithDifferentFindTypes);
-        this.handleLoadingFindTypes(setFindTypes)
-        //console.log(setFindTypes)
-    }*/
 
     populateFindTypes(jsonObj) {
         const  ListWithDifferentFindTypes = []
@@ -172,27 +170,8 @@ export class CardList extends Component {
         this.handleFindSubtype(textSubtype)
     }
 
-    /*handleFindSubtype(textSubtype) {
-        fetch(this.requestURL)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    //console.log(result)
-                    this.populateFindSubtype(result, textSubtype)
-                },
-                // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-                // чтобы не перехватывать исключения из ошибок в самих компонентах.
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )
-    }*/
-
     handleFindSubtype(textSubtype) {
-        this.requestSubURL = this.requestURL + '?subtype=' + textSubtype;
+        this.requestSubURL = this.requestURL + '?type=' + this.state.clickedTypes + '&subtype=' + textSubtype;
         //console.log(this.requestSubURL)
         fetch(this.requestSubURL)
             .then(res => res.json())
@@ -212,18 +191,6 @@ export class CardList extends Component {
             )
     }
 
-   /* populateFindSubtype(jsonObj, textSubtype) {
-        const  ListWithDifferentFindSubtype = []
-        jsonObj.cards.forEach(function (elem) {
-            if(elem.subtype && elem.subtype === textSubtype) {
-                const e = [elem['id'], elem['imageUrl'], elem['name'], elem['artist']]
-                ListWithDifferentFindSubtype.push(e)
-            }
-        })
-        const setFindSubtype = new Set(ListWithDifferentFindSubtype);
-        this.handleLoadingFindSubtype(setFindSubtype)
-        //console.log(setFindSubtype)
-    }*/
 
     populateFindSubtype(jsonObj) {
         const  ListWithDifferentFindSubtype = []
@@ -321,6 +288,7 @@ export class CardList extends Component {
                         <div className="list-group-item w-100 align-self-center">
 
                             <CardItem itemsTypes={this.state.setFindTypes} itemsSubtype={this.state.setFindSubtype} />
+
                         </div>
 
                     </div>
