@@ -1,17 +1,12 @@
-import React, {Fragment, Component} from 'react';
+import React, {Component} from 'react';
 
 export class Card extends Component {
 
     render() {
 
-        return (
-            <Fragment>
-                <h1>Card page</h1>
-                <div>
-                    <p>Props: {this.props.cardId}</p>
-                </div>
-            </Fragment>
-        )
+        console.log(this.props.cardId)
+        return <h2>New {this.props.cardId}</h2>;
+
     }
 
 }

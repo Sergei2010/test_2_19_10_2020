@@ -6,22 +6,24 @@ export class CardItem extends Component {
 
     constructor(props) {
         super(props);
-
-        this.onClickHandle = this.onClickHandle.bind(this);
-
         this.state = {
             redirect: false,
             cardId: null
         };
     }
 
-    onClickHandle(e) {
-        e.preventDefault();
-        e.persist();
+    /*onRedirect = (id) => {
+        const {redirect} = this.state
+        if (redirect) {
+            return <Redirect to={'/card'} cardId = {id} />
+        }
+    }*/
+
+    onClickHandle = (id) => {
         this.setState({
             redirect: true,
-            cardId: 'peter'
-        });
+            cardId: id
+        })
     }
 
     render() {
@@ -29,8 +31,9 @@ export class CardItem extends Component {
         const ItemsTypes = [...this.props.itemsTypes].map((number, index) =>
             <div
                 className="card d-sm-inline-flex m-1 border-primary p-1"
-                key={number.id}
-                onClick={this.onClickHandle}
+                key={index}
+                id={number.id}
+                onClick={(e) => this.onClickHandle(number.id, e)}
             >
                 <img className="card-img-top" src={number.imageUrl} alt="img" />
                 <div className="card-body">
@@ -44,7 +47,7 @@ export class CardItem extends Component {
             <div
                 className="card d-sm-inline-flex m-1 border-primary p-1"
                 key={index}
-                onClick={this.onClickHandle}
+                onClick={(e) => this.onClickHandle(number.id, e)}
             >
                 <img className="card-img-top" src={number.imageUrl} alt="img" />
                 <div className="card-body">
@@ -52,26 +55,28 @@ export class CardItem extends Component {
                     <p className="card-text">{number.artist}</p>
                 </div>
             </div>
+
         )
 
+        if (this.state.redirect === false)
 
-        return(
+            return(
 
+                <div className="list-group-item text-center">
 
+                    {ItemsTypes}
+                    {ItemsSubtype}
+
+                </div>
+
+            )
+
+        else return(
             <div className="list-group-item text-center">
-
-                {ItemsTypes}
-                {ItemsSubtype}
-
+                <Redirect to={`/card`} />;
+                {console.log(this.state.cardId)}
                 <Card cardId={this.state.cardId} />
-                {console.log(this.state)}
-                {/*const {redirect} = this.state
-                if (redirect) {
-                return <Redirect to={`/card`}/>
-            }*/}
-
             </div>
-
         )
 
     }

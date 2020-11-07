@@ -9,15 +9,6 @@ export class CardList extends Component {
     constructor(props) {
         super(props);
 
-        this.handleLoadingTypes = this.handleLoadingTypes.bind(this);
-        this.handleLoadingSubtype = this.handleLoadingSubtype.bind(this);
-
-        this.handleClickTypes = this.handleClickTypes.bind(this);
-        this.handleClickSubtype = this.handleClickSubtype.bind(this);
-
-        this.handleFindTypes = this.handleFindTypes.bind(this);
-        this.handleFindSubtype = this.handleFindSubtype.bind(this);
-
         this.state = {
             setTypes: new Set(),
             setSubtype: new Set(),
@@ -80,7 +71,7 @@ export class CardList extends Component {
             )
     }
 
-    populateTypes(jsonObj) {
+    populateTypes = (jsonObj) => {
         const  ListWithDifferentTypes = []
         jsonObj.types.forEach(function (elem) {
             Object.values(jsonObj.types).forEach(function (e) {
@@ -91,13 +82,13 @@ export class CardList extends Component {
         this.handleLoadingTypes(setTypes)
     }
 
-    handleLoadingTypes(setTypes) {
+    handleLoadingTypes = (setTypes) => {
         this.setState({setTypes: setTypes});
         //console.log(this.state.setTypes)
     }
 
 
-    populateSubtype(jsonObj) {
+    populateSubtype = (jsonObj) => {
         const  ListWithDifferentSubtype = []
         jsonObj.subtypes.forEach(function (elem) {
             Object.values(jsonObj.subtypes).forEach(function (e) {
@@ -107,12 +98,12 @@ export class CardList extends Component {
         const setSubtype = new Set(ListWithDifferentSubtype);
         this.handleLoadingSubtype(setSubtype)
     }
-    handleLoadingSubtype(setSubtype) {
+    handleLoadingSubtype = (setSubtype) => {
         this.setState({setSubtype: setSubtype});
         //console.log(this.state.setSubtype)
     }
 
-    handleClickTypes(e) {
+    handleClickTypes = (e) => {
         e.preventDefault();
         e.persist();
         const textTypes = e.target.textContent;
@@ -122,7 +113,7 @@ export class CardList extends Component {
         this.handleFindTypes(textTypes)
     }
 
-    handleFindTypes(textTypes) {
+    handleFindTypes = (textTypes) => {
         this.requestTypURL = this.requestURL + '?types=' + textTypes;
         //console.log(this.requestTypURL);
         fetch(this.requestTypURL)
@@ -143,7 +134,7 @@ export class CardList extends Component {
             )
     }
 
-    populateFindTypes(jsonObj) {
+    populateFindTypes = (jsonObj) => {
         const  ListWithDifferentFindTypes = []
         jsonObj.cards.forEach(function (e) {
             ListWithDifferentFindTypes.push(e)
@@ -153,7 +144,7 @@ export class CardList extends Component {
         //console.log(setFindTypes)
     }
 
-    handleLoadingFindTypes(setFindTypes) {
+    handleLoadingFindTypes = (setFindTypes) => {
         this.setState({
             setFindTypes: setFindTypes,
             setFindSubtype: ''
@@ -161,7 +152,7 @@ export class CardList extends Component {
         //console.log(this.state.setTypes)
     }
 
-    handleClickSubtype(e) {
+    handleClickSubtype = (e) => {
         e.preventDefault();
         e.persist();
         const textSubtype = e.target.textContent;
@@ -170,7 +161,7 @@ export class CardList extends Component {
         this.handleFindSubtype(textSubtype)
     }
 
-    handleFindSubtype(textSubtype) {
+    handleFindSubtype = (textSubtype) => {
         this.requestSubURL = this.requestURL + '?type=' + this.state.clickedTypes + '&subtype=' + textSubtype;
         //console.log(this.requestSubURL)
         fetch(this.requestSubURL)
@@ -192,7 +183,7 @@ export class CardList extends Component {
     }
 
 
-    populateFindSubtype(jsonObj) {
+    populateFindSubtype = (jsonObj) => {
         const  ListWithDifferentFindSubtype = []
         jsonObj.cards.forEach(function (e) {
             ListWithDifferentFindSubtype.push(e)
@@ -202,7 +193,7 @@ export class CardList extends Component {
         //console.log(setFindSubtype)
     }
 
-    handleLoadingFindSubtype(setFindSubtype) {
+    handleLoadingFindSubtype = (setFindSubtype) => {
         this.setState({
             setFindSubtype: setFindSubtype,
             setFindTypes: ''
@@ -285,7 +276,7 @@ export class CardList extends Component {
 
                         </div>
 
-                        <div className="list-group-item w-100 align-self-center">
+                        <div className="card-group w-100 align-self-center">
 
                             <CardItem itemsTypes={this.state.setFindTypes} itemsSubtype={this.state.setFindSubtype} />
 
