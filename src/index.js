@@ -13,7 +13,7 @@ const history = createBrowserHistory()
 render(
   <React.StrictMode>
       <Router history={history}>
-          <App />
+         <App />
       </Router>
   </React.StrictMode>,
   document.getElementById('root')

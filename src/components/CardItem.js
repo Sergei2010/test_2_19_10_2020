@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import {Redirect} from "react-router";
 import {Card} from "../pages/Card";
 
 export class CardItem extends Component {
@@ -11,13 +10,6 @@ export class CardItem extends Component {
             cardId: null
         };
     }
-
-    /*onRedirect = (id) => {
-        const {redirect} = this.state
-        if (redirect) {
-            return <Redirect to={'/card'} cardId = {id} />
-        }
-    }*/
 
     onClickHandle = (id) => {
         this.setState({
@@ -72,11 +64,15 @@ export class CardItem extends Component {
             )
 
         else return(
+
             <div className="list-group-item text-center">
-                <Redirect to={`/card`} />;
-                {console.log(this.state.cardId)}
-                <Card cardId={this.state.cardId} />
+
+                    <Card cardId = {this.state.cardId} />
+
+                    {console.log(this.state.cardId)}
+
             </div>
+
         )
 
     }
