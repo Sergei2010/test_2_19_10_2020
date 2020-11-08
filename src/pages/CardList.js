@@ -276,7 +276,7 @@ export class CardList extends Component {
 
                         </div>
 
-                        <div className="card-group w-100 align-self-center">
+                        <div className="card-group w-100 justify-content-center">
 
                             <CardItem itemsTypes={this.state.setFindTypes} itemsSubtype={this.state.setFindSubtype} />
 

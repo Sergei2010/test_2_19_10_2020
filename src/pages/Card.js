@@ -6,8 +6,6 @@ export class Card extends Component {
 
     constructor(props) {
         super(props);
-        this.populateItemsCard = this.populateItemsCard.bind(this);
-        this.handleLoadingItemsCard = this.handleLoadingItemsCard.bind(this);
         this.state = {
             imageUrlHiRes: ''
         }
@@ -44,11 +42,11 @@ export class Card extends Component {
 
         return(
 
-            <div className="card border-primary p-1">
+            <div className="card d-flex justify-content-center">
                 <img
-                    className="card-img-top"
+                    className="card-img-top img-fluid"
                     src={this.state.imageUrlHiRes}
-                    alt="Card image cap"
+                    alt="Card cap"
                 />
             </div>
 

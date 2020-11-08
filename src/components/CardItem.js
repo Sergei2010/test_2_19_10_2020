@@ -65,7 +65,7 @@ export class CardItem extends Component {
 
         else return(
 
-            <div className="list-group-item text-center">
+            <div className="list-group-item justify-content-center">
 
                     <Card cardId = {this.state.cardId} />
 
